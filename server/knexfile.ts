@@ -1,7 +1,6 @@
 import path from 'path';
 
 // arquivo responsavel para execução das migrations
-
 module.exports = {
     client: 'sqlite3',
     connection: {
