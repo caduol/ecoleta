@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.use(routes)
 
-// servindo arquivos staticos, podendo ser - imagens, pdf
+// servindo arquivos estaticos, podendo ser - imagens, pdf
 app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')))
 
 app.listen(3333)
