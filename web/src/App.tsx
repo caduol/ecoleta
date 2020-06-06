@@ -3,7 +3,7 @@ import './App.css';
 
 // JSX: Sintaxe de XML dentro do Javascript
 
-import Routes from './router'
+import Routes from './routes'
 
 function App() {
 
