@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
-import { Feather as Icon } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+
+import { useNavigation, useRoute } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
+import * as Location from "expo-location";
+
+import { Feather as Icon } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
 import api from '../../services/api';
-import * as Location from "expo-location";
 
 interface Item {
     id: number;
@@ -18,9 +20,15 @@ interface Point {
     id: number;
     name: string;
     image: string;
+    image_url: string;
     latitude: number;
     longitude: number;
 
+}
+
+interface Params {
+    uf: string;
+    city: string;
 }
 
 const Points = () => {
@@ -30,6 +38,9 @@ const Points = () => {
 
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
     const navigation = useNavigation()
+    const route = useRoute();
+
+    const routeParams = route.params as Params;
 
     useEffect(() => {
         api.get('items').then(response => {
@@ -59,17 +70,19 @@ const Points = () => {
         loadPosition();
     }, [])
 
+
     useEffect(() => {
-        api.get('points', {
+        api.get('/points', {
             params: {
-                city: 'Rio',
-                uf: 'SP',
-                items: [1, 2]
+                city: routeParams.city,
+                uf: routeParams.uf,
+                items: selectedItems
             }
         }).then(response => {
             setPoints(response.data)
+
         })
-    }, [])
+    }, [selectedItems])
 
     function handleNavigateBack() {
         navigation.goBack()
@@ -80,7 +93,7 @@ const Points = () => {
     }
 
     function handleSelectItem(id: number) {
-        console.log(id)
+
         const alreadySelected = selectedItems.findIndex(item => item === id)
 
         if (alreadySelected >= 0) {
@@ -105,6 +118,7 @@ const Points = () => {
                 <View style={styles.mapContainer}>
                     {initialPosition[0] !== 0 && (
                         <MapView
+                            loadingEnabled={true}
                             style={styles.map}
                             initialRegion={{
                                 latitude: initialPosition[0],
@@ -123,7 +137,7 @@ const Points = () => {
                                         longitude: point.longitude
                                     }} >
                                     <View style={styles.mapMarkerContainer}>
-                                        <Image style={styles.mapMarkerImage} source={{ uri: point.image }} />
+                                        <Image style={styles.mapMarkerImage} source={{ uri: point.image_url }} />
                                         <Text style={styles.mapMarkerTitle}>{point.name}</Text>
                                     </View>
                                 </Marker>
@@ -132,8 +146,6 @@ const Points = () => {
 
                         </MapView>
                     )}
-
-
                 </View>
             </View>
 

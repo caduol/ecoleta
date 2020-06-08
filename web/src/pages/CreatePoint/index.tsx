@@ -7,11 +7,15 @@ import { LeafletMouseEvent } from 'leaflet'
 import axios from 'axios'
 import api from '../../services/api'
 
+import Dropzone from '../../components/Dropzone'
+
 import './styles.css'
 import logo from '../../assets/logo.svg'
 
 //  array ou objeto: sempre informar manualmente o tipo da variavel
 // a interface é quem faz a representação do formato que o objeto vai ter
+
+
 
 interface Item {
     id: number;
@@ -35,17 +39,20 @@ const CreatePoint = () => {
     const [cities, setCities] = useState<string[]>([])
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
 
-    const [selectedUf, setSelectedUf] = useState('0')
-    const [selectedCity, setSelectedCity] = useState('0')
-    const [selectedItems, setSelectedItems] = useState<number[]>([])
-    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
-    const history = useHistory();
-
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         whatsapp: ''
     })
+
+    const [selectedUf, setSelectedUf] = useState('0')
+    const [selectedCity, setSelectedCity] = useState('0')
+    const [selectedItems, setSelectedItems] = useState<number[]>([])
+    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
+    const [selectedFile, setSelectedFile] = useState<File>()
+    const history = useHistory();
+
+
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
@@ -108,7 +115,6 @@ const CreatePoint = () => {
     }
 
     function handleSelectItem(id: number) {
-        console.log(id)
         const alreadySelected = selectedItems.findIndex(item => item === id)
 
         if (alreadySelected >= 0) {
@@ -128,15 +134,19 @@ const CreatePoint = () => {
         const [latitude, longitude] = selectedPosition
         const items = selectedItems
 
-        const data = {
-            name,
-            email,
-            whatsapp,
-            uf,
-            city,
-            latitude,
-            longitude,
-            items
+        const data = new FormData()
+
+        data.append('name', name);
+        data.append('email', email);
+        data.append('whatsapp', whatsapp);
+        data.append('uf', uf);
+        data.append('city', city);
+        data.append('latitude', String(latitude));
+        data.append('longitude', String(longitude));
+        data.append('items', items.join(','));
+
+        if (selectedFile) {
+            data.append('image', selectedFile)
         }
 
         alert('Ponto de coleta criado!')
@@ -158,6 +168,7 @@ const CreatePoint = () => {
             <form onSubmit={handleSubmit}>
                 <h1>Cadastro do <br />ponto de coleta</h1>
 
+                <Dropzone onFileUploaded={setSelectedFile} />
                 <fieldset>
                     <legend><h2>Dados</h2></legend>
                     <div className="field">
