@@ -9,7 +9,6 @@ import * as Location from "expo-location";
 import { Feather as Icon } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
 import api from '../../services/api';
-
 interface Item {
     id: number;
     title: string;
@@ -42,11 +41,7 @@ const Points = () => {
 
     const routeParams = route.params as Params;
 
-    useEffect(() => {
-        api.get('items').then(response => {
-            setItems(response.data)
-        })
-    }, [])
+
 
     useEffect(() => {
         async function loadPosition() {
@@ -70,6 +65,11 @@ const Points = () => {
         loadPosition();
     }, [])
 
+    useEffect(() => {
+        api.get('items').then(response => {
+            setItems(response.data)
+        })
+    }, [])
 
     useEffect(() => {
         api.get('/points', {
@@ -80,7 +80,6 @@ const Points = () => {
             }
         }).then(response => {
             setPoints(response.data)
-
         })
     }, [selectedItems])
 
@@ -118,7 +117,6 @@ const Points = () => {
                 <View style={styles.mapContainer}>
                     {initialPosition[0] !== 0 && (
                         <MapView
-                            loadingEnabled={true}
                             style={styles.map}
                             initialRegion={{
                                 latitude: initialPosition[0],
@@ -168,8 +166,6 @@ const Points = () => {
                             <Text style={styles.itemTitle}>{item.title}</Text>
                         </TouchableOpacity>
                     ))}
-
-
 
                 </ScrollView>
             </View>
