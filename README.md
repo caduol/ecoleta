@@ -3,9 +3,11 @@
 <a href="LICENSE" style="text-decoration: none">
     <img alt="MIT - License" src="https://img.shields.io/github/license/caduol/ecoleta?color=%233DC57B">
 </a>
+
 <a href="https://github.com/caduol/ecoleta/" style="text-decoration: none">
     <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/caduol/ecoleta">
 </a>
+
 <a href="https://github.com/caduol/ecoleta/stargazers" style="text-decoration: none">
     <img alt="GitHub stars" src="https://img.shields.io/github/stars/caduol/ecoleta?style=social">
 </a>
